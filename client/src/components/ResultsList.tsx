@@ -1,7 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Box, Card, Pagination, Skeleton, Stack, Typography } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  Box,
+  Card,
+  Pagination,
+  Skeleton,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@mui/material';
 import type { SearchResult } from '../types';
-import ResultCard from './ResultCard';
+import { groupByEpisode, toMomentGroups } from '../lib/grouping';
+import EpisodeCard from './EpisodeCard';
 
 interface ResultsListProps {
   results: SearchResult[];
@@ -9,7 +19,9 @@ interface ResultsListProps {
   hasSearched: boolean;
 }
 
-const PAGE_SIZE = 10;
+type GroupBy = 'moment' | 'episode';
+
+const PAGE_SIZE = 8;
 
 function CardSkeleton() {
   return (
@@ -29,11 +41,16 @@ function CardSkeleton() {
 
 export default function ResultsList({ results, loading, hasSearched }: ResultsListProps) {
   const [page, setPage] = useState(1);
+  const [groupBy, setGroupBy] = useState<GroupBy>('moment');
+  const groups = useMemo(
+    () => (groupBy === 'episode' ? groupByEpisode(results) : toMomentGroups(results)),
+    [results, groupBy],
+  );
 
-  // Reset to the first page whenever a fresh result set arrives.
+  // Reset to the first page whenever the result set or grouping changes.
   useEffect(() => {
     setPage(1);
-  }, [results]);
+  }, [results, groupBy]);
 
   if (loading) {
     return (
@@ -66,18 +83,40 @@ export default function ResultsList({ results, loading, hasSearched }: ResultsLi
     );
   }
 
-  const pageCount = Math.ceil(results.length / PAGE_SIZE);
+  const episodeCount = groupBy === 'episode' ? groups.length : new Set(results.map((r) => r.properties.video_id)).size;
+  const pageCount = Math.ceil(groups.length / PAGE_SIZE);
   const start = (page - 1) * PAGE_SIZE;
-  const pageItems = results.slice(start, start + PAGE_SIZE);
+  const pageItems = groups.slice(start, start + PAGE_SIZE);
 
   return (
     <Stack spacing={2}>
-      <Typography variant="body2" color="text.secondary">
-        {results.length} result{results.length === 1 ? '' : 's'}
-      </Typography>
+      <Stack
+        direction="row"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        useFlexGap
+      >
+        <Typography variant="body2" color="text.secondary">
+          {episodeCount} episode{episodeCount === 1 ? '' : 's'} · {results.length} moment
+          {results.length === 1 ? '' : 's'}
+        </Typography>
 
-      {pageItems.map((result) => (
-        <ResultCard key={result.id} result={result} />
+        <ToggleButtonGroup
+          size="small"
+          exclusive
+          value={groupBy}
+          onChange={(_, value: GroupBy | null) => value && setGroupBy(value)}
+          aria-label="Group results by"
+        >
+          <ToggleButton value="moment">By moment</ToggleButton>
+          <ToggleButton value="episode">By episode</ToggleButton>
+        </ToggleButtonGroup>
+      </Stack>
+
+      {pageItems.map((group) => (
+        <EpisodeCard key={group.chunks[0].id} group={group} />
       ))}
 
       {pageCount > 1 && (

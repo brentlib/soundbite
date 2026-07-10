@@ -13,6 +13,18 @@ export function watchUrl(videoId: string, start?: number): string {
   return `https://www.youtube.com/watch?v=${videoId}${t}`;
 }
 
+// Seconds -> "m:ss" (or "h:mm:ss" for episodes past the hour mark).
+export function formatTimestamp(seconds?: number): string {
+  if (typeof seconds !== 'number' || Number.isNaN(seconds)) return '';
+  const total = Math.floor(seconds);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  const ss = String(s).padStart(2, '0');
+  if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${ss}`;
+  return `${m}:${ss}`;
+}
+
 export function formatDate(publishedAt?: string): string {
   if (!publishedAt) return '';
   const d = new Date(publishedAt);

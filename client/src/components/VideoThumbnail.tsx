@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, IconButton } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { embedUrl, thumbnailUrl } from '../lib/youtube';
 
@@ -62,9 +63,9 @@ export default function VideoThumbnail({ videoId, start, title }: VideoThumbnail
             <IconButton
               disableRipple
               sx={{
-                bgcolor: 'rgba(232,137,74,0.92)',
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.50),
                 color: '#fff',
-                '&:hover': { bgcolor: 'rgba(232,137,74,1)' },
+                '&:hover': { bgcolor: 'primary.main' },
               }}
             >
               <PlayArrowIcon sx={{ fontSize: 40 }} />

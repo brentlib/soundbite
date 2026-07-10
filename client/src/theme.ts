@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 
-// Modern dark theme with a warm accent, evoking the All-In podcast's look.
+// Modern dark theme with a neon synthwave accent.
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    primary: { main: '#e8894a' },
+    primary: { main: '#00d4ff' },
     secondary: { main: '#5b8def' },
     background: { default: '#0e1116', paper: '#171b22' },
     text: { primary: '#e6e8eb', secondary: '#9aa4b2' },

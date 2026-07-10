@@ -27,3 +27,12 @@ export interface SearchOptions {
   weaviateLimit?: number;
   rerankerLimit?: number;
 }
+
+// A single episode with all of its matching chunks, produced by grouping the flat
+// result list on video_id. Episode-level fields come from the best-ranked chunk.
+export interface EpisodeGroup {
+  videoId: string;
+  properties: ResultProperties;
+  chunks: SearchResult[];
+  bestRank: number | null;
+}
