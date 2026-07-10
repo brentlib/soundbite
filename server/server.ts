@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import aiRoutes from './api/routes/aiRoutes';
 
 dotenv.config();
 
@@ -29,6 +30,8 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok' });
 });
+
+app.use('/api/ai', aiRoutes);
 
 // Initialize workers and start server
 async function start() {
