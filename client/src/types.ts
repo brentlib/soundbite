@@ -12,14 +12,14 @@ export interface ResultProperties {
   [key: string]: unknown;
 }
 
-// One item from POST /api/ai/search. Reranked hits sort first (rank 1..N);
-// the search-score tail has reranked=false and rank=null.
+// One item from POST /api/ai/search. Every hit has a 1-based rank across the full ordered
+// list; reranked=true marks the LLM-reranked head, false the Weaviate search-score tail.
 export interface SearchResult {
   id: string;
   properties: ResultProperties;
   score?: number;
   reranked: boolean;
-  rank: number | null;
+  rank: number;
 }
 
 export interface SearchOptions {
@@ -34,5 +34,5 @@ export interface EpisodeGroup {
   videoId: string;
   properties: ResultProperties;
   chunks: SearchResult[];
-  bestRank: number | null;
+  bestRank: number;
 }

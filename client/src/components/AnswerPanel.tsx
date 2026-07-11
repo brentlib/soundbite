@@ -24,19 +24,19 @@ export default function AnswerPanel({ answer, loading, searchLoading, hasSearche
       <CardContent sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
           <AutoAwesomeIcon color="primary" fontSize="small" />
-          <Typography variant="h6">Answer</Typography>
+          <Typography variant="h6">Summary</Typography>
         </Stack>
 
         {!hasSearched && (
           <Typography variant="body2" color="text.secondary">
-            A grounded answer generated from the matching episode transcripts will appear here after
+            A grounded summary generated from the matching episodes will appear here after
             you search.
           </Typography>
         )}
 
         {hasSearched && searchLoading && (
           <Typography variant="body2" color="text.secondary">
-            An answer will appear once the search finishes…
+            A summary will appear once the search finishes…
           </Typography>
         )}
 
@@ -77,7 +77,7 @@ export default function AnswerPanel({ answer, loading, searchLoading, hasSearche
 
         {hasSearched && !searchLoading && !loading && !answer && (
           <Typography variant="body2" color="text.secondary">
-            No answer available for this query.
+            No summary is available for this query.
           </Typography>
         )}
       </CardContent>

@@ -22,7 +22,7 @@ export default function App() {
           All-In <Box component="span" sx={{ color: 'primary.main' }}>Search</Box>
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Search transcripts and get grounded answers from the All-In Podcast.
+          Search episodes from the All-In Podcast.
         </Typography>
       </Stack>
 

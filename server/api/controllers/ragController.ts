@@ -76,9 +76,10 @@ export class RagController {
         id: doc.id,
         properties: doc.properties,
         score: doc.score,
+        // True for the LLM-reranked head; the tail keeps its Weaviate search-score order.
         reranked: index < reranked.length,
-        // 1-based relevance rank from the reranker; null for the un-reranked search-score tail.
-        rank: index < reranked.length ? index + 1 : null
+        // 1-based rank across the whole ordered list, so every result has a position.
+        rank: index + 1
       }));
 
       res.status(200).json(results);

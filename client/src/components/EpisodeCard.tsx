@@ -30,9 +30,13 @@ function ChunkRow({ chunk }: { chunk: SearchResult }) {
   return (
     <Box>
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
-        {chunk.reranked && chunk.rank != null && (
-          <Chip label={`#${chunk.rank}`} size="small" color="primary" sx={{ fontWeight: 700, height: 20 }} />
-        )}
+        <Chip
+          label={`#${chunk.rank}`}
+          size="small"
+          color={chunk.reranked ? 'primary' : 'default'}
+          variant={chunk.reranked ? 'filled' : 'outlined'}
+          sx={{ fontWeight: 700, height: 20 }}
+        />
         <Link
           href={watchUrl(p.video_id, p.start_duration)}
           target="_blank"
