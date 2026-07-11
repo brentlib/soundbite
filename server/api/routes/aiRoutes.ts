@@ -1,23 +1,14 @@
 import { Router } from 'express';
-import { LLMController } from '../controllers/llmController';
-import { EmbeddingController } from '../controllers/embeddingController';
 import { RagController } from '../controllers/ragController';
+import { searchLimiter, ragLimiter } from '../middleware/rateLimit';
 
 const router = Router();
-const llmController = new LLMController();
-const embeddingController = new EmbeddingController();
 const ragController = new RagController();
 
-// Chat endpoints
-router.post('/llm', llmController.submitLLM.bind(llmController));
+// Weaviate hybrid search
+router.post('/search', searchLimiter, ragController.hybridSearch.bind(ragController));
 
-// Embedding endpoints
-router.post('/embeddings', embeddingController.createEmbedding.bind(embeddingController));
-
-// Weaviate search endpoints
-router.post('/search', ragController.hybridSearch.bind(ragController));
-
-// RAG answer endpoint
-router.post('/rag-answer', ragController.answerRag.bind(ragController));
+// RAG answer endpoint (LLM generation)
+router.post('/rag-answer', ragLimiter, ragController.answerRag.bind(ragController));
 
 export default router;

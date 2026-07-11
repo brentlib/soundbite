@@ -2,12 +2,18 @@ import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import path from 'path';
 import aiRoutes from './api/routes/aiRoutes';
+import { globalLimiter } from './api/middleware/rateLimit';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8082;
+
+// Generous per-IP catch-all, applied before body parsing so abusive requests
+// are rejected before we spend effort parsing their payloads.
+app.use(globalLimiter);
 
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
@@ -23,15 +29,25 @@ app.use((req: Request, _res: Response, next: Function) => {
   next();
 });
 
-app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Hello from Model Broker!' });
-});
-
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok' });
 });
 
 app.use('/api/ai', aiRoutes);
+
+// In production the built React client is served by Express (same origin as the
+// API, so no CORS needed). CLIENT_DIST_PATH is set in the container; when it's
+// unset (local dev), Vite serves the client separately and this block is skipped.
+const clientDist = process.env.CLIENT_DIST_PATH;
+if (clientDist) {
+  app.use(express.static(clientDist));
+
+  // SPA fallback: any non-API GET returns index.html so client-side routing works.
+  app.get('*', (req: Request, res: Response, next: Function) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 // Initialize workers and start server
 async function start() {

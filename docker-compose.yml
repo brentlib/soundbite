@@ -1,0 +1,66 @@
+name: all-in
+
+services:
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.36.8
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8080'
+      - --scheme
+      - http
+    # Bound to 127.0.0.1 only: reachable from the box itself (for laptop ingestion
+    # over an SSH tunnel), never from the public internet. The app talks to
+    # Weaviate over the internal Docker network, not these host ports.
+    ports:
+      - '127.0.0.1:8090:8080'
+      - '127.0.0.1:50052:50051'
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      ENABLE_API_BASED_MODULES: 'true'
+      CLUSTER_HOSTNAME: 'node1'
+      # Soft memory cap so Weaviate leaves room for the server + OS on a 4 GB box.
+      GOMEMLIMIT: '2GiB'
+    restart: unless-stopped
+
+  server:
+    build: .
+    # OPENAI_API_KEY and any other secrets come from .env on the box.
+    env_file:
+      - .env
+    # Point the app at Weaviate over the internal network (overrides .env values).
+    environment:
+      NODE_ENV: 'production'
+      PORT: '8082'
+      WEAVIATE_CONNECTION_MODE: 'local'
+      WEAVIATE_HOST: 'weaviate'
+      WEAVIATE_PORT: '8080'
+      WEAVIATE_GRPC_PORT: '50051'
+    depends_on:
+      - weaviate
+    restart: unless-stopped
+    # Bound to 127.0.0.1 only: lets us curl a health check on the box during
+    # deploy/debug. The public reaches the app via the tunnel, not this port.
+    ports:
+      - '127.0.0.1:8082:8082'
+
+  # Cloudflare Tunnel. Only starts with the "tunnel" profile so we can bring the
+  # stack up and smoke-test before a domain/token exists.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - server
+    restart: unless-stopped
+    profiles:
+      - tunnel
+
+volumes:
+  weaviate_data:

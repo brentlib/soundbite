@@ -1,8 +1,9 @@
 # Dependencies
 node_modules
 
-# Client build
+# Builds
 client/dist
+server/dist
 
 # Environment / local overrides
 .env

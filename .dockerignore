@@ -1,0 +1,13 @@
+# Never bake these into an image
+**/node_modules
+**/dist
+**/.env
+**/*.local
+
+# Local-only / not needed at build
+server/tests
+server/config
+.git
+.gitignore
+*.md
+firewall.png
