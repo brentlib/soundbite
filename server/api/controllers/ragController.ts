@@ -50,7 +50,7 @@ export class RagController {
       ]);
       const collection = 'YoutubeVideos';
 
-      const embeddingResponse = await embeddingService.openAiEmbeddings({ input: hydeSnippet, model: 'text-embedding-3-large', dimensions: 1024 });
+      const embeddingResponse = await embeddingService.openAiEmbeddings({ input: hydeSnippet, model: 'text-embedding-3-large', dimensions: 512 });
       const vector = embeddingResponse.data[0].embedding;
 
       const searchResults = await weaviateService.hybridSearch({

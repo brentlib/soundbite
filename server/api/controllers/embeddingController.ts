@@ -13,7 +13,7 @@ export class EmbeddingController {
       const { 
         input,
         model = 'text-embedding-3-large',
-        dimensions = 1024
+        dimensions = 512
       } = req.body;
 
       // Validation: input must be a non-empty string or a non-empty array of non-empty strings

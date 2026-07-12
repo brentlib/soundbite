@@ -16,7 +16,7 @@ class EmbeddingService {
             }
 
             const model = request.model;
-            const dimensions = request.dimensions ?? 1024;
+            const dimensions = request.dimensions ?? 512;
 
             if (model === 'text-embedding-3-small' && dimensions > 1536) {
                 throw new Error('Dimensions for text-embedding-3-small must not be greater than 1536');
