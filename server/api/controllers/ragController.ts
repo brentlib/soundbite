@@ -45,19 +45,22 @@ export class RagController {
       }
 
       const [keywords, hydeSnippet] = await Promise.all([
-        extractKeywords(query),
-        generateHydeSnippet(query)
+        extractKeywords(query, 'gpt-5.4-mini', 'none'),
+        generateHydeSnippet(query, 'gpt-5.4-mini', 'none')
       ]);
       const collection = 'YoutubeVideos';
 
       const embeddingResponse = await embeddingService.openAiEmbeddings({ input: hydeSnippet, model: 'text-embedding-3-large', dimensions: 512 });
       const vector = embeddingResponse.data[0].embedding;
 
+      // No lexical anchors -> pure vector search (alpha = 1); the HyDE side covers the semantic match.
+      const effectiveAlpha = keywords.trim().length === 0 ? 1 : alpha;
+
       const searchResults = await weaviateService.hybridSearch({
         keywords,
         vector,
         collection,
-        alpha,
+        alpha: effectiveAlpha,
         limit: weaviateLimit
       });
 
