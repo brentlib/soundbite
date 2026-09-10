@@ -19,7 +19,7 @@ export default function App() {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack spacing={0.5} sx={{ mb: 3 }}>
         <Typography variant="h5">
-          All-In <Box component="span" sx={{ color: 'primary.main' }}>Search</Box>
+          Sound<Box component="span" sx={{ color: 'primary.main' }}>bite</Box>
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Search episodes from the All-In Podcast.

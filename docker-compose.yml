@@ -1,3 +1,6 @@
+# Deliberately still "all-in" after the repo was renamed to soundbite: this is the
+# Compose project name, which prefixes the weaviate_data volume on the VPS. Renaming
+# it would point the stack at a new, empty volume and orphan the ingested transcripts.
 name: all-in
 
 services:

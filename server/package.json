@@ -1,5 +1,5 @@
 {
-  "name": "all-in",
+  "name": "soundbite",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brentlib/all-in.git"
+    "url": "git+https://github.com/brentlib/soundbite.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/brentlib/all-in/issues"
+    "url": "https://github.com/brentlib/soundbite/issues"
   },
-  "homepage": "https://github.com/brentlib/all-in#readme",
+  "homepage": "https://github.com/brentlib/soundbite#readme",
   "dependencies": {
     "axios": "^1.18.1",
     "body-parser": "^1.20.2",

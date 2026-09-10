@@ -1,6 +1,6 @@
-# All-In Search
+# Soundbite
 
-A search engine for the [All-In Podcast](https://www.youtube.com/@allin) that understands natural language questions and answers them using the actual podcast transcripts. Ask something like "What did the hosts say about interest rate cuts?" and the app finds the relevant moments across episodes, generates a concise answer grounded in what the hosts said, and links every citation to the exact timestamp on YouTube.
+A search engine for tech and business podcasts that understands natural language questions and answers them using the actual podcast transcripts. Ask something like "What did the hosts say about interest rate cuts?" and the app finds the relevant moments across episodes, generates a concise answer grounded in what the hosts said, and links every citation to the exact timestamp on YouTube. The corpus is initially seeded with years of episodes from the [All-In Podcast](https://www.youtube.com/@allin), which is one of the most popular tech-focused channels on YouTube today. The corpus will be expanded to other tech and business channels in the future.
 
 **Live site:** [soundbite.dev](https://soundbite.dev)
 
@@ -28,4 +28,4 @@ The embedded passage and extracted keywords feed into a hybrid search that combi
 
 ---
 
-This is an independent portfolio project and is not affiliated with or endorsed by the All-In Podcast.
+This is an independent portfolio project and is not affiliated with or endorsed by any specific podcast or channel.
